@@ -8,7 +8,6 @@ import org.springframework.integration.sftp.outbound.SftpMessageHandler;
 import org.springframework.integration.sftp.session.DefaultSftpSessionFactory;
 import org.springframework.messaging.MessageHandler;
 
-import java.io.File;
 import java.time.LocalDateTime;
 
 @Configuration
@@ -23,6 +22,8 @@ public class UploadConfiguration {
         factory.setPassword("password123");
         return factory;
     }
+
+
 
     @Bean
     @ServiceActivator(inputChannel = "uploadfile")
