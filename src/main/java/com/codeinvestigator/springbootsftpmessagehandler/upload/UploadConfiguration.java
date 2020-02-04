@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Configuration
 public class UploadConfiguration {
 
+    @Bean
     public DefaultSftpSessionFactory gimmeFactory(){
         DefaultSftpSessionFactory factory = new DefaultSftpSessionFactory();
         factory.setHost("0.0.0.0");
@@ -27,9 +28,9 @@ public class UploadConfiguration {
 
     @Bean
     @ServiceActivator(inputChannel = "uploadfile")
-    MessageHandler uploadHandler(){
-        SftpMessageHandler messageHandler = new SftpMessageHandler(gimmeFactory());
-        messageHandler.setRemoteDirectoryExpression(new LiteralExpression("/upload"));
+    MessageHandler uploadHandler(DefaultSftpSessionFactory factory){
+        SftpMessageHandler messageHandler = new SftpMessageHandler(factory);
+        messageHandler.setRemoteDirectoryExpression(new LiteralExpression("/upload/topsecret"));
         messageHandler.setFileNameGenerator(message -> String.format("mytextfile_%s.txt", LocalDateTime.now()));
         return messageHandler;
     }
