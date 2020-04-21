@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  mysftpFirst:
+    image: atmoz/sftp
+    ports:
+      - "22:22"
+    command: ["mike:password123:::upload"]
+    entrypoint: "/entrypoint"
+
+  mysftpSecond:
+    image: atmoz/sftp
+    ports:
+      - "2222:22"
+    command: ["mike:password123:::upload"]
+    entrypoint: "/entrypoint"

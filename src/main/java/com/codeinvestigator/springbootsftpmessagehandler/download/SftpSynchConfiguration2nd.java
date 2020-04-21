@@ -12,26 +12,25 @@ import org.springframework.integration.sftp.filters.SftpSimplePatternFileListFil
 import org.springframework.integration.sftp.inbound.SftpInboundFileSynchronizer;
 import org.springframework.integration.sftp.inbound.SftpInboundFileSynchronizingMessageSource;
 import org.springframework.integration.sftp.session.DefaultSftpSessionFactory;
-import org.springframework.messaging.MessageHandler;
 
 import java.io.File;
 import java.io.IOException;
 
 @Configuration
 @Slf4j
-public class SftpSynchConfiguration {
+public class SftpSynchConfiguration2nd {
 
     public DefaultSftpSessionFactory gimmeFactory(){
         DefaultSftpSessionFactory factory = new DefaultSftpSessionFactory();
         factory.setHost("0.0.0.0");
-        factory.setPort(22);
+        factory.setPort(2222);
         factory.setAllowUnknownKeys(true);
         factory.setUser("mike");
         factory.setPassword("password123");
         return factory;
     }
 
-    @Bean(name="mydefaultsync")
+    @Bean(name="mydefaultsyncSecond")
     public SftpInboundFileSynchronizer synchronizer(){
         SftpInboundFileSynchronizer sync = new SftpInboundFileSynchronizer(gimmeFactory());
         sync.setDeleteRemoteFiles(true);
@@ -40,24 +39,24 @@ public class SftpSynchConfiguration {
         return sync;
     }
 
-    @Bean(name="sftpMessageSource")
-    @InboundChannelAdapter(channel="fileuploaded", poller = @Poller(fixedDelay = "3000"))
-    public MessageSource<File> sftpMessageSource(){
+    @Bean(name="sftpMessageSourceSecond")
+    @InboundChannelAdapter(channel="fileuploadedSecond", poller = @Poller(fixedDelay = "3000"))
+    public MessageSource<File> sftpMessageSourceSecond(){
         SftpInboundFileSynchronizingMessageSource source =
                 new SftpInboundFileSynchronizingMessageSource(synchronizer());
-        source.setLocalDirectory(new File("tmp/incoming"));
+        source.setLocalDirectory(new File("tmp2/incoming"));
         source.setAutoCreateLocalDirectory(true);
         source.setMaxFetchSize(1);
         return source;
     }
 
 
-    @ServiceActivator(inputChannel = "fileuploaded")
+    @ServiceActivator(inputChannel = "fileuploadedSecond")
     public void handleIncomingFile(File file) throws IOException {
-        log.info(String.format("handleIncomingFile BEGIN %s", file.getName()));
+        log.info(String.format("2nd handleIncomingFile BEGIN %s", file.getName()));
         String content = FileUtils.readFileToString(file, "UTF-8");
-        log.info(String.format("Content: %s", content));
-        log.info(String.format("handleIncomingFile END %s", file.getName()));
+        log.info(String.format("Content 2nd: %s", content));
+        log.info(String.format("2nd handleIncomingFile END %s", file.getName()));
     }
 
 
